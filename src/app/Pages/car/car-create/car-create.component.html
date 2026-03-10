@@ -1,0 +1,56 @@
+<div class="form-container">
+  <h2>Add Car</h2>
+
+  <form [formGroup]="carForm" (ngSubmit)="submit()">
+
+    <div class="form-row">
+      <label>Car Name :</label>
+      <input type="text" formControlName="name" />
+    </div>
+
+    <div class="form-row">
+      <label>Category :</label>
+      <select formControlName="categoryId">
+        <option value="">-- Select Category --</option>
+        <option *ngFor="let c of categories" [value]="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Price Per Hour :</label>
+      <input type="number" formControlName="pricePerHour" />
+    </div>
+
+    <div class="form-row">
+      <label>Price Per Day :</label>
+      <input type="number" formControlName="pricePerDay" />
+    </div>
+
+    <div class="form-row">
+      <label>Price Per Week :</label>
+      <input type="number" formControlName="pricePerWeek" />
+    </div>
+
+    <div class="form-row">
+      <label>Insurance Plan :</label>
+      <select formControlName="insurancePlanId">
+        <option value="">-- Select Insurance Plan --</option>
+        <option *ngFor="let i of insurancePlans" [value]="i.id">
+          {{ i.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Car Image :</label>
+      <input type="file" (change)="onFileChange($event)" />
+    </div>
+
+    <div class="button-row">
+      <button type="submit">Add Car</button>
+    </div>
+
+  </form>
+</div>

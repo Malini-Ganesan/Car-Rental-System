@@ -1,0 +1,30 @@
+<div class="card">
+  <h2>Book Car</h2>
+
+  <div class="form-row">
+    <label>Car :</label>
+    <select [(ngModel)]="selectedCarId" (change)="calculatePrice()">
+      <option value="">Select Car</option>
+      <option *ngFor="let car of cars" [value]="car.id">
+        {{ car.name }} - {{ car.pricePerDay | currency }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Start Date :</label>
+    <input type="date" [(ngModel)]="startDate" (change)="calculatePrice()" />
+  </div>
+
+  <div class="form-row">
+    <label>End Date :</label>
+    <input type="date" [(ngModel)]="endDate" (change)="calculatePrice()" />
+  </div>
+
+  <div class="form-row" *ngIf="totalPrice > 0">
+    <label>Total :</label>
+    <span class="price">{{ totalPrice | currency }}</span>
+  </div>
+
+  <button class="btn-primary" (click)="book()">Confirm Booking</button>
+</div>

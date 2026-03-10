@@ -1,0 +1,34 @@
+<div class="car-list">
+  <h2>Cars</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price/Day</th>
+        <th>Insurance</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let car of cars">
+        <td>
+          <img 
+  *ngIf="car.imageUrl" 
+  [src]="'http://localhost:5020' + car.imageUrl" 
+  width="80" 
+/>
+        </td>
+        <td>{{ car.name }}</td>
+        <td>{{ car.categoryName }}</td>
+        <td>{{ car.pricePerDay | currency }}</td>
+        <td>{{ car.insuranceName }} ({{ car.insuranceCost | currency }}/day)</td>
+        <td>
+          <a [routerLink]="['/admin/car-edit', car.id]">Edit</a>
+          <button (click)="deleteCar(car.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

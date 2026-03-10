@@ -1,18 +1,82 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+import { OAuthModule, OAuthService, AuthConfig } from 'angular-oauth2-oidc';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+
+import { LoginComponent } from './auth/login/login.component';
+import { CarListComponent } from './Pages/car/car-list/car-list.component';
+import { CarCreateComponent } from './Pages/car/car-create/car-create.component';
+import { CarEditComponent } from './Pages/car/car-edit/car-edit.component';
+import { DashboardComponent } from './Pages/dashboard/dashboard.component';
+import { UserBookingComponent } from './Pages/user-booking/user-booking.component';
+
+
+export const authCodeFlowConfig: AuthConfig = {
+  issuer: 'http://localhost:8080/realms/CarRentalRealm',
+  redirectUri: window.location.origin + '/dashboard',
+  clientId: 'car-rental-frontend',
+  responseType: 'code',
+  scope: 'openid profile email offline_access',
+  showDebugInformation: false,
+  requireHttps: false, 
+};
+
+export function initializeApp(oauthService: OAuthService) {
+  return async () => {
+    oauthService.configure(authCodeFlowConfig);
+    oauthService.setupAutomaticSilentRefresh();
+    await oauthService.loadDiscoveryDocumentAndTryLogin();
+
+    if (!oauthService.hasValidAccessToken()) {
+      oauthService.initLoginFlow();
+    }
+  };
+}
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    CarListComponent,
+    CarCreateComponent,
+    CarEditComponent,
+    DashboardComponent,
+    UserBookingComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    CommonModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['http://localhost:5020/api'], 
+        sendAccessToken: true
+      }
+    })
   ],
-  providers: [],
+  providers: [
+     {
+       provide: APP_INITIALIZER,
+       useFactory: initializeApp,
+       multi: true,
+       deps: [OAuthService],
+     },
+     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

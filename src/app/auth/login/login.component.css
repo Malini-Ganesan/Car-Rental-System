@@ -1,0 +1,91 @@
+/* Full background wrapper */
+.auth-wrapper {
+  height: 100vh;
+  width: 100%;
+  background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Dark overlay */
+.auth-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Centered card */
+.auth-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  padding: 40px;
+  width: 350px;
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 14px;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 13px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #ff4d30;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background: #e63e23;
+}
+
+/* Register link */
+.switch {
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+.switch a {
+  color: #ff4d30;
+  text-decoration: none;
+  font-weight: bold;
+}

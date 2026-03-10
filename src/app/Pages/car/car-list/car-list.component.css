@@ -1,0 +1,19 @@
+.car-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.car-list th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.car-list img {
+  border-radius: 5px;
+}
+button {
+  margin-left: 5px;
+  padding: 4px 8px;
+  cursor: pointer;
+}

@@ -1,0 +1,56 @@
+.form-container {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 30px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  max-width: 800px;
+}
+
+h2 {
+  margin-bottom: 25px;
+  color: white;
+}
+
+/* Each row */
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+/* Labels */
+.form-row label {
+  width: 180px;
+  font-weight: 500;
+  color: white;
+}
+
+/* Inputs + selects */
+.form-row input,
+.form-row select {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+
+/* Button row */
+.button-row {
+  margin-top: 20px;
+  text-align: right;
+}
+
+button {
+  background: #ff4d30;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #e63e22;
+}

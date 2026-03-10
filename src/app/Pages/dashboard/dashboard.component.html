@@ -1,0 +1,26 @@
+<div class="dashboard-wrapper">
+  <div class="overlay"></div>
+  <div class="dashboard-container">
+    
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <h2 class="logo">Car<span>Rental</span></h2>
+        <nav class="nav-links">
+          <a *ngIf="showAdmin() || showUser()" routerLink="car-list" routerLinkActive="active-link">Car List</a>
+          <a *ngIf="showAdmin()" routerLink="car-create" routerLinkActive="active-link">Add Car</a>
+          <a *ngIf="showUser()" routerLink="user-booking" routerLinkActive="active-link">User Booking</a>
+        </nav>
+      </div>
+      
+      <!-- Logout moved to bottom -->
+      <div class="sidebar-bottom">
+        <button class="logout-btn" (click)="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+</div>
