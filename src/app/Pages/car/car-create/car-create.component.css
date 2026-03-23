@@ -1,14 +1,16 @@
 .form-container {
-  background: rgba(255, 255, 255, 0.08);
+  background:rgba(0,0,0,0.6);
+
+  backdrop-filter:blur(15px);
   padding: 30px;
   border-radius: 12px;
-  backdrop-filter: blur(10px);
   max-width: 800px;
+  display:grid;
 }
 
 h2 {
   margin-bottom: 25px;
-  color: white;
+  color: black;
 }
 
 /* Each row */

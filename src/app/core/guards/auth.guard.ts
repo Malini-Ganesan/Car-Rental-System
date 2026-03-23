@@ -33,21 +33,22 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
 
     const claims: any = this.oauthService.getIdentityClaims();
-    // Get realm roles
+    //Get realm roles
     const realmRoles: string[] = claims?.realm_access?.roles || [];
 
-    //  Replace this with YOUR Keycloak client id
+    //Keycloak client id
     const clientId = 'car-rental-frontend';
 
-    // Get client roles
+    //Get client roles
     const clientRoles: string[] =
     claims?.resource_access?.[clientId]?.roles || [];
 
     // Merge both
     const userRoles: string[] = [...realmRoles, ...clientRoles];
 
-console.log('User Roles:', userRoles);
-    // 🔎 Case-insensitive comparison (important)
+    console.log('User Roles:', userRoles);
+
+    //Case-insensitive comparison
     const hasRole = requiredRoles.some((role: string) =>
       userRoles.some((userRole: string) =>
         userRole.toLowerCase() === role.toLowerCase()

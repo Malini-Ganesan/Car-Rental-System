@@ -1,0 +1,167 @@
+.landing-wrapper{
+  min-height:100vh;
+  width:100%;
+  margin:0;
+  padding:0;
+
+  background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70')
+  no-repeat center center/cover;
+
+  position:relative;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.overlay{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.65);
+}
+
+.landing-content{
+  position:relative;
+  z-index:2;
+
+  text-align:center;
+  color:white;
+
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+
+  padding:60px 80px;
+  border-radius:15px;
+
+  max-width:600px;
+  width:90%;
+}
+.landing-content h1{
+  font-size:clamp(32px,5vw,48px);
+  margin-bottom:20px;
+}
+
+.landing-content p{
+  font-size:clamp(16px,2vw,20px);
+  margin-bottom:30px;
+}
+
+.login-btn{
+  padding:12px 28px;
+  background:#ff4d30;
+  border:none;
+  color:white;
+  border-radius:8px;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.login-btn:hover{
+  background:#e63e24;
+}
+/* ABOUT SECTION */
+
+.about-section{
+  padding:100px 20px;
+  background:#111;
+  color:white;
+  text-align:center;
+}
+
+.about-container{
+  max-width:1100px;
+  margin:auto;
+}
+
+.about-description{
+  margin-top:15px;
+  margin-bottom:50px;
+  font-size:18px;
+  opacity:0.9;
+}
+
+.about-features{
+  display:flex;
+  gap:30px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.feature-card{
+  width:260px;
+  padding:25px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  transition:0.3s;
+}
+
+.feature-card:hover{
+  transform:translateY(-5px);
+  background:rgba(255,255,255,0.15);
+}
+
+
+/* CONTACT SECTION */
+
+.contact-section{
+  padding:100px 20px;
+  background:#1a1a1a;
+  color:white;
+  text-align:center;
+}
+
+.contact-container{
+  max-width:900px;
+  margin:auto;
+}
+
+.contact-subtitle{
+  margin-bottom:40px;
+  opacity:0.8;
+}
+
+.contact-details{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  flex-wrap:wrap;
+  margin-bottom:40px;
+}
+
+.contact-card{
+  background:rgba(255,255,255,0.08);
+  padding:20px;
+  border-radius:10px;
+  width:200px;
+}
+
+.contact-form{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.contact-form input,
+.contact-form textarea{
+  padding:12px;
+  border:none;
+  border-radius:6px;
+}
+
+.contact-form button{
+  padding:12px;
+  border:none;
+  border-radius:6px;
+  background:#ff4d30;
+  color:white;
+  cursor:pointer;
+}
+
+.contact-form button:hover{
+  background:#e63e24;
+}

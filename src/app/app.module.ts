@@ -9,22 +9,24 @@ import { CommonModule } from '@angular/common';
 import { OAuthModule, OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
-import { LoginComponent } from './auth/login/login.component';
 import { CarListComponent } from './Pages/car/car-list/car-list.component';
 import { CarCreateComponent } from './Pages/car/car-create/car-create.component';
-import { CarEditComponent } from './Pages/car/car-edit/car-edit.component';
 import { DashboardComponent } from './Pages/dashboard/dashboard.component';
 import { UserBookingComponent } from './Pages/user-booking/user-booking.component';
+import { LandingComponent } from './Pages/landing/landing.component';
+import { NavbarComponent } from './Pages/navbar/navbar.component';
+import { SidebarComponent } from './Pages/sidebar/sidebar.component';
 
 
 export const authCodeFlowConfig: AuthConfig = {
   issuer: 'http://localhost:8080/realms/CarRentalRealm',
-  redirectUri: window.location.origin + '/dashboard',
+  redirectUri: window.location.origin + '/dashboard' ,
   clientId: 'car-rental-frontend',
   responseType: 'code',
   scope: 'openid profile email offline_access',
-  showDebugInformation: false,
-  requireHttps: false, 
+  showDebugInformation: true,
+  requireHttps: false,
+  postLogoutRedirectUri: window.location.origin 
 };
 
 export function initializeApp(oauthService: OAuthService) {
@@ -32,10 +34,6 @@ export function initializeApp(oauthService: OAuthService) {
     oauthService.configure(authCodeFlowConfig);
     oauthService.setupAutomaticSilentRefresh();
     await oauthService.loadDiscoveryDocumentAndTryLogin();
-
-    if (!oauthService.hasValidAccessToken()) {
-      oauthService.initLoginFlow();
-    }
   };
 }
 
@@ -43,12 +41,13 @@ export function initializeApp(oauthService: OAuthService) {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     CarListComponent,
     CarCreateComponent,
-    CarEditComponent,
     DashboardComponent,
-    UserBookingComponent
+    UserBookingComponent,
+    LandingComponent,
+    NavbarComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

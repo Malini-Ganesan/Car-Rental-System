@@ -1,30 +1,26 @@
-<div class="card">
-  <h2>Book Car</h2>
+<h2>My Bookings</h2>
 
-  <div class="form-row">
-    <label>Car :</label>
-    <select [(ngModel)]="selectedCarId" (change)="calculatePrice()">
-      <option value="">Select Car</option>
-      <option *ngFor="let car of cars" [value]="car.id">
-        {{ car.name }} - {{ car.pricePerDay | currency }}
-      </option>
-    </select>
-  </div>
+<table *ngIf="bookings.length > 0">
+  <thead>
+    <tr>
+      <th>Car Name</th>
+      <th *ngIf="isAdmin">User Name</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Location</th>
+      <th>Total Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let b of bookings">
+      <td>{{ b.carName }}</td>
+       <td *ngIf="isAdmin">{{ b.userName }}</td>
+      <td>{{ b.startDate | date: 'shortDate' }}</td>
+      <td>{{ b.endDate | date: 'shortDate' }}</td>
+      <td>{{ b.location }}</td>
+      <td>{{ b.totalPrice | currency }}</td>
+    </tr>
+  </tbody>
+</table>
 
-  <div class="form-row">
-    <label>Start Date :</label>
-    <input type="date" [(ngModel)]="startDate" (change)="calculatePrice()" />
-  </div>
-
-  <div class="form-row">
-    <label>End Date :</label>
-    <input type="date" [(ngModel)]="endDate" (change)="calculatePrice()" />
-  </div>
-
-  <div class="form-row" *ngIf="totalPrice > 0">
-    <label>Total :</label>
-    <span class="price">{{ totalPrice | currency }}</span>
-  </div>
-
-  <button class="btn-primary" (click)="book()">Confirm Booking</button>
-</div>
+<p *ngIf="bookings.length === 0">You have no bookings yet.</p>

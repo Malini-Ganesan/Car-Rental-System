@@ -3,13 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { CarListComponent } from './Pages/car/car-list/car-list.component';
 import { CarCreateComponent } from './Pages/car/car-create/car-create.component';
-import { CarEditComponent } from './Pages/car/car-edit/car-edit.component';
 import { DashboardComponent } from './Pages/dashboard/dashboard.component';
 import { UserBookingComponent } from './Pages/user-booking/user-booking.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { LandingComponent } from './Pages/landing/landing.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', component: LandingComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -21,26 +21,21 @@ const routes: Routes = [
         path: 'car-list', 
         component: CarListComponent, 
         canActivate: [AuthGuard],
-        data: { roles: ['User', 'Admin'] } // Both can view
+        data: { roles: ['User', 'Admin'] } 
       },
       { 
         path: 'car-create', 
         component: CarCreateComponent, 
-        data: { roles: ['Admin'] } // Only Admin
-      },
-      { 
-        path: 'car-edit/:id', 
-        component: CarEditComponent,
-        data: { roles: ['Admin'] } // Only Admin
+        data: { roles: ['Admin'] } 
       },
       {
         path: 'user-booking', 
         component: UserBookingComponent, 
-        data: { roles: ['User'] } // Only Customer
+        data: { roles: ['User'] } 
       }
     ]
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

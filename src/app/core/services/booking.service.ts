@@ -7,13 +7,17 @@ export class BookingService {
 
   private baseUrl = 'http://localhost:5020/api/Booking';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   create(data: any): Observable<any> {
-    return this.http.post(this.baseUrl, data);
+    return this.http.post('http://localhost:5020/api/Booking', data);
   }
 
   getMyBookings(): Observable<any> {
-    return this.http.get(this.baseUrl);
+    return this.http.get(`${this.baseUrl}/my-bookings`);
+  }
+
+  getAllBookings(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/all-bookings`);
   }
 }

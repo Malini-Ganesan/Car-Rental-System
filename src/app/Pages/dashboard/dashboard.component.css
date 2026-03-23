@@ -1,97 +1,69 @@
-.dashboard-wrapper {
-  height: 100vh;
-  background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') no-repeat center center/cover;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+
+/* whole dashboard layout */
+
+.dashboard-wrapper{
+
+  display:flex;
+
+  margin-top:70px; /* space for navbar */
+
+  height:calc(100vh - 70px);
+
+  background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70')
+  no-repeat center center/cover;
+   backdrop-filter:blur(35px);
 }
 
-.overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
+/* sidebar */
+
+app-sidebar{
+  width:240px;
 }
 
-.dashboard-container {
-  position: relative;
-  z-index: 2;
-  width: 90%;
-  height: 90%;
-  display: flex;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(15px);
-  border-radius: 15px;
-  overflow: hidden;
+/* content */
+
+.content{
+
+  flex:1;
+
+  padding:30px;
+
+  overflow-y:auto;
+
+  background:rgba(255,255,255,0.08);
+
+  backdrop-filter:blur(15px);
+
+  color:white;
+
 }
 
-/* Sidebar Layout Fix */
-.sidebar {
-  width: 250px;
-  background: rgba(0,0,0,0.5);
-  padding: 40px 20px;
-  display: flex;
-  flex-direction: column;
-  /* 🚨 This pushes the bottom section to the end of the sidebar */
-  justify-content: space-between; 
+
+
+/* glass dashboard card */
+
+.dashboard-container{
+  position:relative;
+  z-index:2;
+
+  width:100%;
+  height:100%;
+
+  display:flex;
+
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(18px);
+
+  border-radius:16px;
+  overflow:hidden;
 }
 
-.sidebar h2 {
-  color: white;
-  margin-bottom: 40px;
-  text-align: center;
-}
+/* content */
 
-/* Nav link container to prevent overlapping */
-.nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 10px; /* 🚨 Adds space between buttons to prevent overlapping */
-}
-
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  padding: 12px 15px;
-  border-radius: 8px;
-  transition: 0.3s;
-  font-weight: 500;
-  display: block;
-}
-
-/* Hover & Active States */
-.sidebar a:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px); /* Smooth slide effect on hover */
-}
-
-.active-link {
-  background: #ff4d30 !important; /* Car rental signature orange */
-  box-shadow: 0 4px 15px rgba(255, 77, 48, 0.4);
-}
-
-/* Logout Button at Bottom */
-.logout-btn {
-  width: 100%;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-  font-weight: 600;
-}
-
-.logout-btn:hover {
-  background: #ff4d30;
-  border-color: #ff4d30;
-}
-
-.content {
-  flex: 1;
-  padding: 30px;
-  overflow-y: auto;
-  color: white;
+.content{
+  flex:1;
+  padding:30px;
+  overflow-y:auto;
+  color:white;
 }

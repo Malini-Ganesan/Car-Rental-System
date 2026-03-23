@@ -1,0 +1,24 @@
+<aside class="sidebar">
+
+  <nav class="nav-links">
+
+    <a *ngIf="showAdmin() || showUser()"
+       routerLink="/dashboard/car-list"
+       routerLinkActive="active-link">
+       Car List
+    </a>
+
+    <a *ngIf="showAdmin()"
+       routerLink="/dashboard/car-create"
+       routerLinkActive="active-link">
+       Add Car
+    </a>
+
+    <a *ngIf="showUser()"
+       routerLink="/dashboard/user-booking"
+       routerLinkActive="active-link">
+       My Bookings
+    </a>
+
+  </nav>
+</aside>

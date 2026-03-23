@@ -1,34 +1,141 @@
 <div class="car-list">
-  <h2>Cars</h2>
+  <h2>Cars List</h2>
+
   <table>
     <thead>
       <tr>
         <th>Image</th>
         <th>Name</th>
         <th>Category</th>
+        <th>Price/Hour</th>
         <th>Price/Day</th>
+        <th>Price/Week</th>
         <th>Insurance</th>
         <th>Actions</th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let car of cars">
+
         <td>
-          <img 
-  *ngIf="car.imageUrl" 
-  [src]="'http://localhost:5020' + car.imageUrl" 
-  width="80" 
-/>
+          <img *ngIf="car.imageUrl" [src]="'http://localhost:5020' + car.imageUrl" width="80" />
         </td>
+
         <td>{{ car.name }}</td>
+
         <td>{{ car.categoryName }}</td>
+
+        <td>{{ car.pricePerHour | currency }}</td>
+
         <td>{{ car.pricePerDay | currency }}</td>
-        <td>{{ car.insuranceName }} ({{ car.insuranceCost | currency }}/day)</td>
+
+        <td>{{ car.pricePerWeek | currency }}</td>
+
         <td>
-          <a [routerLink]="['/admin/car-edit', car.id]">Edit</a>
-          <button (click)="deleteCar(car.id)">Delete</button>
+          {{ car.insuranceName }}
+          <br />
+          <small>{{ car.insuranceCost | currency }}/day</small>
         </td>
+
+        <td>
+          <button *ngIf="isAdmin" (click)="openEditModal(car)">Edit</button>
+          <button *ngIf="isAdmin" (click)="deleteCar(car.id)">Delete</button>
+          <button *ngIf="isAdmin || isUser" (click)="openBookingPopup(car)">
+            Book Now
+          </button>
+        </td>
+
       </tr>
     </tbody>
   </table>
+</div>
+
+<!--edit popup-->
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-content">
+
+    <h2 class="modal-title">Edit Car</h2>
+
+    <div class="form-group">
+      <label>Car Name</label>
+      <input type="text" [(ngModel)]="selectedCar.name" placeholder="Enter car name">
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select [(ngModel)]="selectedCar.categoryId">
+        <option value="">Select category</option>
+        <option *ngFor="let c of categories" [value]="c.id">
+          {{ c.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Price Per Hour</label>
+      <input type="number" [(ngModel)]="selectedCar.pricePerHour" placeholder="Enter price per hour">
+    </div>
+    <div class="form-group">
+      <label>Price Per Day</label>
+      <input type="number" [(ngModel)]="selectedCar.pricePerDay" placeholder="Enter price per day">
+    </div>
+
+    <div class="form-group">
+      <label>Price Per Week</label>
+      <input type="number" [(ngModel)]="selectedCar.pricePerWeek" placeholder="Enter price per week">
+    </div>
+    <div class="form-group">
+      <label>Insurance Plan</label>
+      <select [(ngModel)]="selectedCar.insuranceId">
+        <option value="">Select insurance</option>
+        <option *ngFor="let i of insurances" [value]="i.id">
+          {{ i.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="update-btn" (click)="updateCar()">Update</button>
+      <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+<!--booking popup-->
+<div class="modal" *ngIf="showBookingModal">
+
+  <div class="modal-content">
+
+    <h2 class="modal-title">Book Car</h2>
+
+    <label>Car</label>
+    <select [(ngModel)]="booking.carId">
+      <option *ngFor="let car of cars" [value]="car.id">
+        {{car.name}}
+      </option>
+    </select>
+
+    <label>Start Date</label>
+    <input type="date" [(ngModel)]="booking.startDate" (change)="calculatePrice()">
+
+    <label>End Date</label>
+    <input type="date" [(ngModel)]="booking.endDate" (change)="calculatePrice()">
+
+    <label>Location</label>
+    <input type="text" [(ngModel)]="booking.location">
+
+    <p><b>Total Price: {{booking.price}}</b></p>
+
+    <button (click)="confirmBooking()">
+      Confirm Booking
+    </button>
+
+    <button (click)="showBookingModal=false">
+      Cancel
+    </button>
+
+  </div>
+
 </div>

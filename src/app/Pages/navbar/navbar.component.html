@@ -1,0 +1,38 @@
+<nav class="navbar">
+
+  <div class="navbar-container">
+
+    <div class="logo">
+      Car<span>Rental</span>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="menu-toggle" (click)="toggleMenu()">
+      ☰
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="nav-links" [class.active]="menuOpen">
+
+      <!-- Landing Page Links -->
+      <ng-container *ngIf="!isLoggedIn">
+        <a href="#home" (click)="closeMenu()">Home</a>
+        <a href="#about" (click)="closeMenu()">About</a>
+        <a href="#contact" (click)="closeMenu()">Contact</a>
+
+        <button (click)="login()">Login</button>
+
+      </ng-container>
+
+      <!-- Dashboard Links -->
+      <ng-container *ngIf="isLoggedIn">
+
+        <button class="logout-btn" (click)="logout()">Logout</button>
+
+      </ng-container>
+
+    </div>
+
+  </div>
+
+</nav>
