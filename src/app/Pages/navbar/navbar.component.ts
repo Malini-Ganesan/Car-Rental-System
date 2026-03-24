@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,31 +10,39 @@ import { OAuthService } from 'angular-oauth2-oidc';
 export class NavbarComponent implements OnInit {
 
   isLoggedIn = false;
+  menuOpen = false;
 
   constructor(
-    private oauthService: OAuthService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.isLoggedIn = this.oauthService.hasValidAccessToken();
+    this.updateLoginStatus();
+
+    setInterval(() => {
+      this.updateLoginStatus();
+    }, 1000);
+  }
+
+  updateLoginStatus() {
+    this.isLoggedIn = this.authService.isLoggedIn();
   }
 
   login() {
-    this.oauthService.initLoginFlow();
+    this.authService.login();
   }
 
   logout() {
-    this.oauthService.logOut();
+    this.authService.logout();
     this.router.navigate(['/']);
   }
-menuOpen = false;
 
-toggleMenu(){
-  this.menuOpen = !this.menuOpen;
-}
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
-closeMenu(){
-  this.menuOpen = false;
-}
+  closeMenu() {
+    this.menuOpen = false;
+  }
 }

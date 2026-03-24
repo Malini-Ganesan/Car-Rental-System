@@ -15,7 +15,7 @@ export class UserBookingComponent implements OnInit {
   constructor(
     private bookingService: BookingService,
     private oauthService: OAuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.checkUserRole();
@@ -37,4 +37,39 @@ export class UserBookingComponent implements OnInit {
       this.bookingService.getMyBookings().subscribe(res => this.bookings = res);
     }
   }
+
+  cancelBooking(booking: any) {
+
+  if (confirm("Are you sure to cancel?")) {
+
+    booking.isCancelling = true;
+
+    this.bookingService.cancelBooking(booking.id).subscribe({
+      next: (res: any) => {
+        const message =
+          typeof res === 'string'
+            ? res
+            : res?.message || "Booking cancelled successfully";
+
+        alert(message);
+
+        booking.status = "Cancelled";
+        booking.isCancelling = false;
+
+        this.loadBookings();
+      },
+
+      error: (err) => {
+        booking.isCancelling = false;
+
+        const message =
+          err.error?.message ||
+          err.error ||
+          "Cancel failed";
+
+        alert(message);
+      }
+    });
+  }
+}
 }

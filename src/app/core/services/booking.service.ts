@@ -4,13 +4,12 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
-
   private baseUrl = 'http://localhost:5020/api/Booking';
 
   constructor(private http: HttpClient) { }
 
   create(data: any): Observable<any> {
-    return this.http.post('http://localhost:5020/api/Booking', data);
+    return this.http.post(`${this.baseUrl}`, data);
   }
 
   getMyBookings(): Observable<any> {
@@ -19,5 +18,9 @@ export class BookingService {
 
   getAllBookings(): Observable<any> {
     return this.http.get(`${this.baseUrl}/all-bookings`);
+  }
+  // booking.service.ts
+  cancelBooking(id: number) {
+    return this.http.put(`${this.baseUrl}/cancel/${id}`, {});
   }
 }

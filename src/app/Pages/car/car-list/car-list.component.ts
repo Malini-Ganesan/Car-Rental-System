@@ -22,9 +22,11 @@ export class CarListComponent implements OnInit {
 
   booking: any = {
     carId: '',
+    type: 'hour', 
+    hours: null, 
+    location: '',
     startDate: '',
     endDate: '',
-    location: '',
     price: 0
   };
 
@@ -73,6 +75,19 @@ export class CarListComponent implements OnInit {
   }
 
   updateCar() {
+
+    if (
+    !this.selectedCar.name ||
+    !this.selectedCar.categoryId ||
+    !this.selectedCar.pricePerHour ||
+    !this.selectedCar.pricePerDay ||
+    !this.selectedCar.pricePerWeek ||
+    !this.selectedCar.insuranceId
+  ) {
+    alert("Please fill all required fields");
+    return;
+  }
+
     const formData = new FormData();
     formData.append("name", this.selectedCar.name);
     formData.append("categoryId", this.selectedCar.categoryId);
@@ -94,6 +109,8 @@ export class CarListComponent implements OnInit {
     this.selectedCarForBooking = car;
     this.booking = {
       carId: car.id,
+      type: 'hour',  
+      hours: null, 
       startDate: '',
       endDate: '',
       location: '',
@@ -101,59 +118,153 @@ export class CarListComponent implements OnInit {
     };
     this.showBookingModal = true;
   }
+ onTypeChange() {
+  this.booking.price = 0;
+
+  if (this.booking.type === 'hour') {
+    this.booking.startDate = '';
+    this.booking.endDate = '';
+  } else {
+    this.booking.hours = null;
+  }
+}
 
   calculatePrice() {
-    if (!this.booking.startDate || !this.booking.endDate) return;
+  const car = this.selectedCarForBooking;
+  if (this.booking.startDate && this.booking.endDate) {
+  this.carService
+    .checkAvailability(
+      this.booking.carId,
+      this.booking.startDate,
+      this.booking.endDate
+    )
+    .subscribe(res => {
+      if (res.isBooked) {
+        alert("Car already booked for selected dates");
+        this.booking.price = 0;
+      }
+    });
+}
+
+  if (!car) return;
+
+  console.log("Booking:", this.booking);
+
+  // 🔹 HOUR
+  if (this.booking.type === 'hour') {
+
+    const hours = Number(this.booking.hours);
+
+    if (!hours || hours <= 0) {
+      this.booking.price = 0;
+      return;
+    }
+
+    this.booking.price = hours * Number(car.pricePerHour);
+  }
+
+// 🔥 DAY + WEEK COMBINED LOGIC
+  else {
+
+    if (!this.booking.startDate || !this.booking.endDate) {
+      this.booking.price = 0;
+      return;
+    }
+
     const start = new Date(this.booking.startDate);
     const end = new Date(this.booking.endDate);
-    const days = (end.getTime() - start.getTime()) / (1000 * 3600 * 24);
 
-    if (days > 0) {
-      this.booking.price = days * this.selectedCarForBooking.pricePerDay;
-    } else {
+    let diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
+
+    if (diffDays <= 0) {
       this.booking.price = 0;
-    }
-  }
-
-  confirmBooking() {
-    // Validate fields
-    if (!this.booking.startDate || !this.booking.endDate || !this.booking.location) {
-      alert("Please fill all fields");
       return;
     }
 
-    // Get logged-in user's ID from Keycloak claims
-    const claims: any = this.oauthService.getIdentityClaims();
-    if (!claims || !claims.sub) {
-      alert("User not logged in!");
+    const weeks = Math.floor(diffDays / 7);   // full weeks
+    const remainingDays = diffDays % 7;       // leftover days
+
+    const weekPrice = weeks * Number(car.pricePerWeek);
+    const dayPrice = remainingDays * Number(car.pricePerDay);
+
+    this.booking.price = weekPrice + dayPrice;
+
+    // 🔍 Debug (optional)
+    console.log(`Days: ${diffDays}, Weeks: ${weeks}, Remaining: ${remainingDays}`);
+  }
+}
+confirmBooking() {
+
+  const claims: any = this.oauthService.getIdentityClaims();
+  if (!claims || !claims.sub) {
+    alert("User not logged in!");
+    return;
+  }
+
+  if (!this.booking.location) {
+    alert("Enter location");
+    return;
+  }
+
+  let startDate: string;
+  let endDate: string;
+
+  // 🔹 HOUR BOOKING
+  if (this.booking.type === 'hour') {
+
+    if (!this.booking.hours || this.booking.hours <= 0) {
+      alert("Enter valid hours");
       return;
     }
-    const userId = claims.sub;
 
-    // Prepare payload
-    const payload = {
-      carId: this.booking.carId,
-      startDate: new Date(this.booking.startDate + 'T00:00:00Z').toISOString(),
-      endDate: new Date(this.booking.endDate + 'T00:00:00Z').toISOString(),
-      location: this.booking.location,
-      totalPrice: this.booking.price,
-      UserId: userId
-    };
-
-    // Send booking request
-    this.carService.createBooking(payload)
-      .subscribe({
-        next: () => {
-          alert("Booking Successful");
-          this.showBookingModal = false;
-          this.loadCars(); // optional, reload if needed
-        },
-        error: (err) => {
-          console.error("Booking failed:", err.error);
-          alert("Booking failed: " + JSON.stringify(err.error));
-        }
-      });
+    const today = new Date();
+    startDate = today.toISOString();
+    endDate = today.toISOString();
   }
+
+  // 🔹 DAY / WEEK BOOKING
+  else {
+
+    if (!this.booking.startDate || !this.booking.endDate) {
+      alert("Select start and end date");
+      return;
+    }
+
+    startDate = new Date(this.booking.startDate).toISOString();
+    endDate = new Date(this.booking.endDate).toISOString();
+  }
+
+  const payload = {
+    carId: this.booking.carId,
+    startDate: startDate,
+    endDate: endDate,
+    location: this.booking.location,
+    totalPrice: this.booking.price
+  };
+
+  console.log("Payload:", payload); 
+
+  this.carService.createBooking(payload).subscribe({
+    next: () => {
+      alert("Booking Successful");
+      this.showBookingModal = false;
+      this.loadCars();
+    },
+    error: (err) => {
+  console.error(err);
+
+  let message = "Booking failed";
+
+  if (typeof err.error === 'string') {
+    message = err.error;
+  } else if (err.error?.message) {
+    message = err.error.message;
+  }
+
+  alert(message);
+}
+  });
+}
 
   deleteCar(id: number) {
     if (confirm('Are you sure you want to delete this car?')) {

@@ -1,15 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:5020/api/Auth'; 
-  // change port if needed
+  constructor(private oauthService: OAuthService) {}
 
-  constructor(private http: HttpClient) {}
+  login() {
+    this.oauthService.initCodeFlow();
+  }
 
+  logout() {
+    this.oauthService.logOut();
+  }
+
+  isLoggedIn(): boolean {
+    return this.oauthService.hasValidAccessToken();
+  }
+
+  getUser() {
+    return this.oauthService.getIdentityClaims();
+  }
+
+  getToken() {
+    return this.oauthService.getAccessToken();
+  }
 }

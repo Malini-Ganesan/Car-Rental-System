@@ -111,17 +111,36 @@
     <h2 class="modal-title">Book Car</h2>
 
     <label>Car</label>
-    <select [(ngModel)]="booking.carId">
-      <option *ngFor="let car of cars" [value]="car.id">
-        {{car.name}}
-      </option>
+    <input type="text" value=" {{ selectedCarForBooking?.name }}">
+
+
+    <!-- Booking Type -->
+    <label>Booking Type</label>
+    <select [(ngModel)]="booking.type" (ngModelChange)="onTypeChange()">
+      <option value="hour">Hour</option>
+      <option value="day">Day</option>
+      <option value="week">Week</option>
     </select>
 
+    <div *ngIf="booking.type === 'hour'">
+    <label>
+      Enter number of {{ booking.type | titlecase }}
+    </label>
+    </div>
+
+    <input type="number" [disabled]="booking.type !== 'hour'" [(ngModel)]="booking.hours" (ngModelChange)="calculatePrice()" min="1" />
+
+    <div *ngIf="booking.type !== 'hour'">
     <label>Start Date</label>
-    <input type="date" [(ngModel)]="booking.startDate" (change)="calculatePrice()">
+    <input type="date"
+           [(ngModel)]="booking.startDate"
+           (ngModelChange)="calculatePrice()" />
 
     <label>End Date</label>
-    <input type="date" [(ngModel)]="booking.endDate" (change)="calculatePrice()">
+    <input type="date"
+           [(ngModel)]="booking.endDate"
+           (ngModelChange)="calculatePrice()" />
+  </div>
 
     <label>Location</label>
     <input type="text" [(ngModel)]="booking.location">

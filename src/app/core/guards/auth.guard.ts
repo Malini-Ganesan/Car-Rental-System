@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
 
-  constructor(private oauthService: OAuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     return this.checkAccess(route);
@@ -20,8 +21,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   private checkAccess(route: ActivatedRouteSnapshot): boolean {
 
     // 🔐 Not logged in
-    if (!this.oauthService.hasValidAccessToken()) {
-      this.oauthService.initCodeFlow();
+    if (!this.authService.isLoggedIn()) {
+      this.authService.login();
       return false;
     }
 
@@ -32,7 +33,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       return true;
     }
 
-    const claims: any = this.oauthService.getIdentityClaims();
+    const claims: any = this.authService.getUser();
     //Get realm roles
     const realmRoles: string[] = claims?.realm_access?.roles || [];
 
