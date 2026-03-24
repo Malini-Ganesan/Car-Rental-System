@@ -12,6 +12,7 @@
         <th>Price/Week</th>
         <th>Insurance</th>
         <th>Actions</th>
+        <th>Track car</th>
       </tr>
     </thead>
 
@@ -45,7 +46,9 @@
             Book Now
           </button>
         </td>
-
+        <td>
+  <button (click)="trackCar(car)">Current location</button>
+</td>
       </tr>
     </tbody>
   </table>
@@ -154,6 +157,28 @@
     <button (click)="showBookingModal=false">
       Cancel
     </button>
+
+  </div>
+</div>
+
+<!-- TRACK CAR MODAL -->
+<div class="modal" *ngIf="showTrackModal">
+
+  <div class="modal-content">
+
+    <h2>Location</h2>
+    <!-- Google Map -->
+    <iframe
+      width="100%"
+      height="300"
+      [src]="mapUrl"
+      style="border:0;"
+      loading="lazy">
+    </iframe>
+
+    <br>
+
+    <button (click)="closeTrackModal()">Close</button>
 
   </div>
 

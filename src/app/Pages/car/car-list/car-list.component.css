@@ -196,6 +196,10 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  align-items: center;
+  width: 150px;
+  margin-left: 35px;
+  padding: 6px 12px;
 }
 
 .modal-content button:first-of-type {
@@ -211,4 +215,32 @@ button {
 /* Button hover effect */
 .modal-content button:hover {
   opacity: 0.9;
+}
+
+/* Tracking model */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+}
+
+iframe {
+  border-radius: 10px;
 }

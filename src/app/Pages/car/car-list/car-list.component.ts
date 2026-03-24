@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CarService } from '../../../core/services/car.service';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-car-list',
@@ -17,16 +18,21 @@ export class CarListComponent implements OnInit {
   categories: any[] = [];
   insurances: any[] = [];
 
+  showTrackModal: boolean = false;
+  mapUrl!: SafeResourceUrl;
+
   isAdmin: boolean = false;
   isUser: boolean = false;
 
   booking: any = {
     carId: '',
-    type: 'hour', 
-    hours: null, 
+    type: 'hour',
+    hours: null,
     location: '',
     startDate: '',
     endDate: '',
+    basePrice: 0,
+    insurancePrice: 0,
     price: 0
   };
 
@@ -34,7 +40,8 @@ export class CarListComponent implements OnInit {
   selectedCarForBooking: any = null;
 
   constructor(private carService: CarService,
-              private oauthService: OAuthService) { }
+    private oauthService: OAuthService,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.loadCars();
@@ -77,16 +84,16 @@ export class CarListComponent implements OnInit {
   updateCar() {
 
     if (
-    !this.selectedCar.name ||
-    !this.selectedCar.categoryId ||
-    !this.selectedCar.pricePerHour ||
-    !this.selectedCar.pricePerDay ||
-    !this.selectedCar.pricePerWeek ||
-    !this.selectedCar.insuranceId
-  ) {
-    alert("Please fill all required fields");
-    return;
-  }
+      !this.selectedCar.name ||
+      !this.selectedCar.categoryId ||
+      !this.selectedCar.pricePerHour ||
+      !this.selectedCar.pricePerDay ||
+      !this.selectedCar.pricePerWeek ||
+      !this.selectedCar.insuranceId
+    ) {
+      alert("Please fill all required fields");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("name", this.selectedCar.name);
@@ -109,166 +116,189 @@ export class CarListComponent implements OnInit {
     this.selectedCarForBooking = car;
     this.booking = {
       carId: car.id,
-      type: 'hour',  
-      hours: null, 
+      type: 'hour',
+      hours: null,
       startDate: '',
       endDate: '',
       location: '',
+      basePrice: 0,
+      insurancePrice: 0,
       price: 0
     };
     this.showBookingModal = true;
   }
- onTypeChange() {
-  this.booking.price = 0;
+  onTypeChange() {
+    this.booking.price = 0;
 
-  if (this.booking.type === 'hour') {
-    this.booking.startDate = '';
-    this.booking.endDate = '';
-  } else {
-    this.booking.hours = null;
+    if (this.booking.type === 'hour') {
+      this.booking.startDate = '';
+      this.booking.endDate = '';
+    } else {
+      this.booking.hours = null;
+    }
   }
-}
 
   calculatePrice() {
-  const car = this.selectedCarForBooking;
-  if (this.booking.startDate && this.booking.endDate) {
-  this.carService
-    .checkAvailability(
-      this.booking.carId,
-      this.booking.startDate,
-      this.booking.endDate
-    )
-    .subscribe(res => {
-      if (res.isBooked) {
-        alert("Car already booked for selected dates");
+    const car = this.selectedCarForBooking;
+    if (this.booking.startDate && this.booking.endDate) {
+      this.carService
+        .checkAvailability(
+          this.booking.carId,
+          this.booking.startDate,
+          this.booking.endDate
+        )
+        .subscribe(res => {
+          if (res.isBooked) {
+            alert("Car already booked for selected dates");
+            this.booking.price = 0;
+          }
+        });
+    }
+
+    if (!car) return;
+    let basePrice = 0;
+    let insuranceTotal = 0;
+    console.log("Booking:", this.booking);
+
+    // 🔹 HOUR
+    if (this.booking.type === 'hour') {
+
+      const hours = Number(this.booking.hours);
+
+      if (!hours || hours <= 0) {
         this.booking.price = 0;
+        return;
+      }
+
+      this.booking.price = hours * Number(car.pricePerHour);
+      insuranceTotal = Number(car.insuranceCost);
+    }
+
+    // 🔥 DAY + WEEK COMBINED LOGIC
+    else {
+
+      if (!this.booking.startDate || !this.booking.endDate) {
+        this.booking.price = 0;
+        return;
+      }
+
+      const start = new Date(this.booking.startDate);
+      const end = new Date(this.booking.endDate);
+
+      let diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
+
+      if (diffDays <= 0) {
+        this.booking.price = 0;
+        return;
+      }
+
+      const weeks = Math.floor(diffDays / 7);   // full weeks
+      const remainingDays = diffDays % 7;       // leftover days
+
+      const weekPrice = weeks * Number(car.pricePerWeek);
+      const dayPrice = remainingDays * Number(car.pricePerDay);
+
+      basePrice = weekPrice + dayPrice;
+      insuranceTotal = diffDays * Number(car.insuranceCost);
+      this.booking.price = basePrice + insuranceTotal;
+      // 🔍 Debug (optional)
+      console.log(`Days: ${diffDays}, Weeks: ${weeks}, Remaining: ${remainingDays}`);
+    }
+
+  }
+  confirmBooking() {
+
+    const claims: any = this.oauthService.getIdentityClaims();
+    if (!claims || !claims.sub) {
+      alert("User not logged in!");
+      return;
+    }
+
+    if (!this.booking.location) {
+      alert("Enter location");
+      return;
+    }
+
+    let startDate: string;
+    let endDate: string;
+
+    // 🔹 HOUR BOOKING
+    if (this.booking.type === 'hour') {
+
+      if (!this.booking.hours || this.booking.hours <= 0) {
+        alert("Enter valid hours");
+        return;
+      }
+
+      const today = new Date();
+      startDate = today.toISOString();
+      endDate = today.toISOString();
+    }
+
+    // 🔹 DAY / WEEK BOOKING
+    else {
+
+      if (!this.booking.startDate || !this.booking.endDate) {
+        alert("Select start and end date");
+        return;
+      }
+
+      startDate = new Date(this.booking.startDate).toISOString();
+      endDate = new Date(this.booking.endDate).toISOString();
+    }
+
+    const payload = {
+      carId: this.booking.carId,
+      startDate: startDate,
+      endDate: endDate,
+      location: this.booking.location,
+      totalPrice: this.booking.price
+    };
+
+    console.log("Payload:", payload);
+
+    this.carService.createBooking(payload).subscribe({
+      next: () => {
+        alert("Booking Successful");
+        this.showBookingModal = false;
+        this.loadCars();
+      },
+      error: (err) => {
+        console.error(err);
+
+        let message = "Booking failed";
+
+        if (typeof err.error === 'string') {
+          message = err.error;
+        } else if (err.error?.message) {
+          message = err.error.message;
+        }
+
+        alert(message);
       }
     });
-}
-
-  if (!car) return;
-
-  console.log("Booking:", this.booking);
-
-  // 🔹 HOUR
-  if (this.booking.type === 'hour') {
-
-    const hours = Number(this.booking.hours);
-
-    if (!hours || hours <= 0) {
-      this.booking.price = 0;
-      return;
-    }
-
-    this.booking.price = hours * Number(car.pricePerHour);
   }
-
-// 🔥 DAY + WEEK COMBINED LOGIC
-  else {
-
-    if (!this.booking.startDate || !this.booking.endDate) {
-      this.booking.price = 0;
-      return;
-    }
-
-    const start = new Date(this.booking.startDate);
-    const end = new Date(this.booking.endDate);
-
-    let diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
-
-    if (diffDays <= 0) {
-      this.booking.price = 0;
-      return;
-    }
-
-    const weeks = Math.floor(diffDays / 7);   // full weeks
-    const remainingDays = diffDays % 7;       // leftover days
-
-    const weekPrice = weeks * Number(car.pricePerWeek);
-    const dayPrice = remainingDays * Number(car.pricePerDay);
-
-    this.booking.price = weekPrice + dayPrice;
-
-    // 🔍 Debug (optional)
-    console.log(`Days: ${diffDays}, Weeks: ${weeks}, Remaining: ${remainingDays}`);
-  }
-}
-confirmBooking() {
-
-  const claims: any = this.oauthService.getIdentityClaims();
-  if (!claims || !claims.sub) {
-    alert("User not logged in!");
-    return;
-  }
-
-  if (!this.booking.location) {
-    alert("Enter location");
-    return;
-  }
-
-  let startDate: string;
-  let endDate: string;
-
-  // 🔹 HOUR BOOKING
-  if (this.booking.type === 'hour') {
-
-    if (!this.booking.hours || this.booking.hours <= 0) {
-      alert("Enter valid hours");
-      return;
-    }
-
-    const today = new Date();
-    startDate = today.toISOString();
-    endDate = today.toISOString();
-  }
-
-  // 🔹 DAY / WEEK BOOKING
-  else {
-
-    if (!this.booking.startDate || !this.booking.endDate) {
-      alert("Select start and end date");
-      return;
-    }
-
-    startDate = new Date(this.booking.startDate).toISOString();
-    endDate = new Date(this.booking.endDate).toISOString();
-  }
-
-  const payload = {
-    carId: this.booking.carId,
-    startDate: startDate,
-    endDate: endDate,
-    location: this.booking.location,
-    totalPrice: this.booking.price
-  };
-
-  console.log("Payload:", payload); 
-
-  this.carService.createBooking(payload).subscribe({
-    next: () => {
-      alert("Booking Successful");
-      this.showBookingModal = false;
-      this.loadCars();
-    },
-    error: (err) => {
-  console.error(err);
-
-  let message = "Booking failed";
-
-  if (typeof err.error === 'string') {
-    message = err.error;
-  } else if (err.error?.message) {
-    message = err.error.message;
-  }
-
-  alert(message);
-}
-  });
-}
 
   deleteCar(id: number) {
     if (confirm('Are you sure you want to delete this car?')) {
       this.carService.delete(id).subscribe(() => this.loadCars());
     }
+  }
+
+  trackCar(car: any) {
+    
+    // Dummy location (same for all cars)
+    const lat = 9.9252;   // Chennai
+    const lng = 78.1198;
+
+    const url = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+
+    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+
+    this.showTrackModal = true;
+  }
+
+  closeTrackModal() {
+    this.showTrackModal = false;
   }
 }
