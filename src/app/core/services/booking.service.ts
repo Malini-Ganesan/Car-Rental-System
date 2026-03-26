@@ -23,4 +23,7 @@ export class BookingService {
   cancelBooking(id: number) {
     return this.http.put(`${this.baseUrl}/cancel/${id}`, {});
   }
+  deleteBooking(id: number) {
+  return this.http.delete(`http://localhost:8080/api/Booking/${id}`);
+}
 }

@@ -112,3 +112,17 @@
   }
 
 }
+
+.menu-toggle {
+  display: none;
+  font-size: 26px;
+  color: white;
+  cursor: pointer;
+}
+
+/* show only on mobile */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+}

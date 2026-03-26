@@ -12,12 +12,11 @@
         <th>Price/Week</th>
         <th>Insurance</th>
         <th>Actions</th>
-        <th>Track car</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let car of cars">
+      <tr *ngFor="let car of paginatedCars">
 
         <td>
           <img *ngIf="car.imageUrl" [src]="'http://localhost:5020' + car.imageUrl" width="80" />
@@ -46,12 +45,23 @@
             Book Now
           </button>
         </td>
-        <td>
-  <button (click)="trackCar(car)">Current location</button>
-</td>
       </tr>
     </tbody>
   </table>
+
+  <div class="pagination" *ngIf="cars.length > 0">
+
+  <button (click)="prevPage()" [disabled]="currentPage === 1">
+    Prev
+  </button>
+
+  <span>Page {{currentPage}} of {{totalPages}}</span>
+
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+    Next
+  </button>
+
+</div>
 </div>
 
 <!--edit popup-->
@@ -159,27 +169,4 @@
     </button>
 
   </div>
-</div>
-
-<!-- TRACK CAR MODAL -->
-<div class="modal" *ngIf="showTrackModal">
-
-  <div class="modal-content">
-
-    <h2>Location</h2>
-    <!-- Google Map -->
-    <iframe
-      width="100%"
-      height="300"
-      [src]="mapUrl"
-      style="border:0;"
-      loading="lazy">
-    </iframe>
-
-    <br>
-
-    <button (click)="closeTrackModal()">Close</button>
-
-  </div>
-
 </div>

@@ -16,6 +16,10 @@ import { UserBookingComponent } from './Pages/user-booking/user-booking.componen
 import { LandingComponent } from './Pages/landing/landing.component';
 import { NavbarComponent } from './Pages/navbar/navbar.component';
 import { SidebarComponent } from './Pages/sidebar/sidebar.component';
+import { DashboardOverviewComponent } from './Pages/dashboard-overview/dashboard-overview.component';
+import { CarTrackComponent } from './Pages/car/car-track/car-track.component';
+import { FooterComponent } from './Pages/footer/footer.component';
+
 
 
 export const authCodeFlowConfig: AuthConfig = {
@@ -34,6 +38,14 @@ export function initializeApp(oauthService: OAuthService) {
     oauthService.configure(authCodeFlowConfig);
     oauthService.setupAutomaticSilentRefresh();
     await oauthService.loadDiscoveryDocumentAndTryLogin();
+
+    if (oauthService.hasValidAccessToken()) {
+
+      if (window.location.search.includes('iss=')) {
+        window.history.replaceState({}, document.title, '/dashboard/dashboard-main');
+      }
+
+    }
   };
 }
 
@@ -47,7 +59,10 @@ export function initializeApp(oauthService: OAuthService) {
     UserBookingComponent,
     LandingComponent,
     NavbarComponent,
-    SidebarComponent
+    SidebarComponent,
+    DashboardOverviewComponent,
+    CarTrackComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

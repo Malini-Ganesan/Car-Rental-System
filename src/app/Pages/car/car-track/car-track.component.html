@@ -1,4 +1,5 @@
-<h2>My Bookings</h2>
+<div class="car-track">
+<h2>Track the car</h2>
 <div class="booking-wrapper">
   <div class="booking-container">
     <table *ngIf="bookings.length > 0">
@@ -9,10 +10,7 @@
           <th>Start Date</th>
           <th>End Date</th>
           <th>Location</th>
-          <th>Total Price</th>
-          <th>Cancel booking</th>
-          <th *ngIf="isAdmin">Status</th>
-        </tr>
+          <th>Track car</th>
       </thead>
       <tbody>
         <tr *ngFor="let b of paginatedBookings">
@@ -21,20 +19,9 @@
           <td>{{ b.startDate | date: 'shortDate' }}</td>
           <td>{{ b.endDate | date: 'shortDate' }}</td>
           <td>{{ b.location }}</td>
-          <td>{{ b.totalPrice | currency }}</td>
           <td>
-            <button (click)="cancelBooking(b)" [disabled]="b.status === 'Cancelled' || b.isCancelling">
-              {{ b.isCancelling ? 'Cancelling...' : 'Cancel' }}
-            </button>
-          </td>
-          <td>
-            <span *ngIf="isAdmin" [ngClass]="{
-    'status-booked': b.status === 'Booked',
-    'status-cancelled': b.status === 'Cancelled'
-  }">
-              {{ b.status }}
-            </span>
-          </td>
+  <button  (click)="trackCar(b)">Current location</button>
+</td>
         </tr>
       </tbody>
     </table>
@@ -57,4 +44,28 @@
 </div>
 
  </div>
+</div>
+</div>
+
+<!-- TRACK CAR MODAL -->
+<div class="modal" *ngIf="showTrackModal">
+
+  <div class="modal-content">
+
+    <h2>Location</h2>
+    <!-- Google Map -->
+    <iframe
+      width="100%"
+      height="300"
+      [src]="mapUrl"
+      style="border:0;"
+      loading="lazy">
+    </iframe>
+
+    <br>
+
+    <button (click)="closeTrackModal()">Close</button>
+
+  </div>
+
 </div>

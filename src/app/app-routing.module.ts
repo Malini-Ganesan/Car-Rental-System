@@ -7,6 +7,8 @@ import { DashboardComponent } from './Pages/dashboard/dashboard.component';
 import { UserBookingComponent } from './Pages/user-booking/user-booking.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LandingComponent } from './Pages/landing/landing.component';
+import { DashboardOverviewComponent } from './Pages/dashboard-overview/dashboard-overview.component';
+import { CarTrackComponent } from './Pages/car/car-track/car-track.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -17,6 +19,13 @@ const routes: Routes = [
     canActivateChild: [AuthGuard],
     data: { roles: ['Admin', 'User'] },
     children: [
+      { path: '', redirectTo: 'dashboard-main', pathMatch: 'full' },
+      { 
+        path: 'dashboard-main', 
+        component: DashboardOverviewComponent, 
+        canActivate: [AuthGuard],
+        data: { roles: ['User', 'Admin'] } 
+      },
       { 
         path: 'car-list', 
         component: CarListComponent, 
@@ -31,6 +40,11 @@ const routes: Routes = [
       {
         path: 'user-booking', 
         component: UserBookingComponent, 
+        data: { roles: ['User'] } 
+      },
+      {
+        path: 'car-track', 
+        component: CarTrackComponent, 
         data: { roles: ['User'] } 
       }
     ]

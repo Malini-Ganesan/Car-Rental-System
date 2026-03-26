@@ -170,6 +170,7 @@ button {
 
 .modal-content input[type="text"],
 .modal-content input[type="number"],
+.modal-content input[type="date"],
 .modal-content select {
   width: 100%;
   padding: 8px 10px;
@@ -217,30 +218,24 @@ button {
   opacity: 0.9;
 }
 
-/* Tracking model */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
+/* Pagination */
+.pagination {
+  margin-top: 20px;
   text-align: center;
 }
+.pagination button {
+  margin: 0 10px;
+  padding: 6px 12px;
+  border: none;
+  background: #ff4d30;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-iframe {
-  border-radius: 10px;
+.pagination button:disabled {
+  background: gray;
+  cursor: not-allowed;
 }

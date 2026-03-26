@@ -1,0 +1,49 @@
+<div class="dashboard-main">
+
+  <h2>Dashboard Overview</h2>
+
+  <!-- Cards -->
+  <div class="card-container">
+
+    <div class="card">
+      <h3>Total Cars</h3>
+      <p>{{ totalCars }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Total Bookings</h3>
+      <p>{{ totalBookings }}</p>
+    </div>
+
+  </div>
+
+  <!-- Table -->
+    <h2>Bookings Per Car</h2>
+   <div class="data-row">
+  <div class="table-container">
+   
+
+    <table>
+      <thead>
+        <tr>
+          <th>Car Name</th>
+          <th>Bookings</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let name of carNames; let i = index">
+          <td>{{ name }}</td>
+          <td>{{ bookingCounts[i] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-container">
+    <canvas id="bookingChart"></canvas>
+  </div>
+  </div>
+
+</div>

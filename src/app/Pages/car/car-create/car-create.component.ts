@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CarService } from '../../../core/services/car.service';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { DashboardRefreshService } from 'src/app/core/services/dashboard-refresh.service';
 
 @Component({
   selector: 'app-car-create',
@@ -27,7 +28,8 @@ export class CarCreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private carService: CarService,
-    private oauthService: OAuthService
+    private oauthService: OAuthService,
+    private refreshService: DashboardRefreshService
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +85,7 @@ submit() {
   this.carService.create(formData).subscribe({
     next: () => {
       alert('Car added successfully!');
+      this.refreshService.triggerRefresh();
       this.carForm.reset();
     },
     error: (err) => {

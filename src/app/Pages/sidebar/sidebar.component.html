@@ -3,21 +3,31 @@
   <nav class="nav-links">
 
     <a *ngIf="showAdmin() || showUser()"
+       routerLink="/dashboard/dashboard-main"
+       routerLinkActive="active">
+       Dashboard
+    </a>
+    <a *ngIf="showAdmin() || showUser()"
        routerLink="/dashboard/car-list"
-       routerLinkActive="active-link">
+       routerLinkActive="active">
        Car List
     </a>
 
     <a *ngIf="showAdmin()"
        routerLink="/dashboard/car-create"
-       routerLinkActive="active-link">
+       routerLinkActive="active">
        Add Car
     </a>
 
     <a *ngIf="showUser()"
        routerLink="/dashboard/user-booking"
-       routerLinkActive="active-link">
+       routerLinkActive="active">
        My Bookings
+    </a>
+    <a *ngIf="showUser()"
+       routerLink="/dashboard/car-track"
+       routerLinkActive="active">
+       Track Car
     </a>
 
   </nav>

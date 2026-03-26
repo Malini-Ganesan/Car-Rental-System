@@ -22,6 +22,30 @@ export class UserBookingComponent implements OnInit {
     this.loadBookings();
   }
 
+  currentPage: number = 1;
+itemsPerPage: number = 6;
+
+get paginatedBookings() {
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+  return this.bookings.slice(start, start + this.itemsPerPage);
+}
+
+get totalPages() {
+  return Math.ceil(this.bookings.length / this.itemsPerPage);
+}
+
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+  }
+}
+
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
+
   checkUserRole() {
     const claims: any = this.oauthService.getIdentityClaims();
     if (!claims) return;
@@ -36,6 +60,7 @@ export class UserBookingComponent implements OnInit {
     } else {
       this.bookingService.getMyBookings().subscribe(res => this.bookings = res);
     }
+    this.currentPage = 1;
   }
 
   cancelBooking(booking: any) {
@@ -71,5 +96,17 @@ export class UserBookingComponent implements OnInit {
       }
     });
   }
+}
+deleteBooking(booking: any) {
+  if (!confirm('Are you sure you want to delete this booking?')) return;
+
+  this.bookingService.deleteBooking(booking.id).subscribe({
+    next: () => {
+      this.bookings = this.bookings.filter(b => b.id !== booking.id);
+    },
+    error: (err) => {
+      console.error('Delete failed', err);
+    }
+  });
 }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CarService } from '../../../core/services/car.service';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DashboardRefreshService } from 'src/app/core/services/dashboard-refresh.service';
 
 @Component({
   selector: 'app-car-list',
@@ -17,9 +17,6 @@ export class CarListComponent implements OnInit {
 
   categories: any[] = [];
   insurances: any[] = [];
-
-  showTrackModal: boolean = false;
-  mapUrl!: SafeResourceUrl;
 
   isAdmin: boolean = false;
   isUser: boolean = false;
@@ -41,7 +38,7 @@ export class CarListComponent implements OnInit {
 
   constructor(private carService: CarService,
     private oauthService: OAuthService,
-    private sanitizer: DomSanitizer) { }
+    private refreshService: DashboardRefreshService) { }
 
   ngOnInit(): void {
     this.loadCars();
@@ -49,10 +46,35 @@ export class CarListComponent implements OnInit {
     this.loadInsurances();
     this.checkUserRole();
   }
+  //pagination
+currentPage: number = 1;
+itemsPerPage: number = 6;
+
+get paginatedCars() {
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+  return this.cars.slice(start, start + this.itemsPerPage);
+}
+
+get totalPages() {
+  return Math.ceil(this.cars.length / this.itemsPerPage);
+}
+
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+  }
+}
+
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
 
   // ===================== LOAD DATA =====================
   loadCars() {
     this.carService.getAll().subscribe(res => this.cars = res);
+    this.currentPage = 1;
   }
 
   loadCategories() {
@@ -260,6 +282,7 @@ export class CarListComponent implements OnInit {
     this.carService.createBooking(payload).subscribe({
       next: () => {
         alert("Booking Successful");
+         this.refreshService.triggerRefresh();
         this.showBookingModal = false;
         this.loadCars();
       },
@@ -283,22 +306,5 @@ export class CarListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this car?')) {
       this.carService.delete(id).subscribe(() => this.loadCars());
     }
-  }
-
-  trackCar(car: any) {
-    
-    // Dummy location (same for all cars)
-    const lat = 9.9252;   // Chennai
-    const lng = 78.1198;
-
-    const url = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
-
-    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-
-    this.showTrackModal = true;
-  }
-
-  closeTrackModal() {
-    this.showTrackModal = false;
   }
 }
