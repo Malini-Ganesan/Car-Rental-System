@@ -39,6 +39,7 @@
   margin-bottom: 10px;
   font-size: 16px;
   opacity: 0.8;
+  color: white;
 }
 
 .card p {
@@ -61,6 +62,7 @@
   max-height: 250px;
   overflow-x: auto;
   overflow-y: auto;
+  color: white;
 }
 
 /* CHART */
@@ -68,10 +70,10 @@
   background: rgba(0,0,0,0.6);
   padding: 20px;
   border-radius: 12px;
-
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 /* Fix chart size */

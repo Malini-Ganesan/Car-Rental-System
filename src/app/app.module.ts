@@ -19,6 +19,7 @@ import { SidebarComponent } from './Pages/sidebar/sidebar.component';
 import { DashboardOverviewComponent } from './Pages/dashboard-overview/dashboard-overview.component';
 import { CarTrackComponent } from './Pages/car/car-track/car-track.component';
 import { FooterComponent } from './Pages/footer/footer.component';
+import { MonitorComponent } from './Pages/monitor/monitor.component';
 
 
 
@@ -62,7 +63,8 @@ export function initializeApp(oauthService: OAuthService) {
     SidebarComponent,
     DashboardOverviewComponent,
     CarTrackComponent,
-    FooterComponent
+    FooterComponent,
+    MonitorComponent
   ],
   imports: [
     BrowserModule,

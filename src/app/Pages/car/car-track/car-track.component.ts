@@ -71,7 +71,7 @@ prevPage() {
   trackCar(booking: any) {
     
     // Dummy location (same for all cars)
-    const lat = 9.9252;   // Chennai
+    const lat = 9.9252;   // madurai
     const lng = 78.1198;
 
     const url = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;

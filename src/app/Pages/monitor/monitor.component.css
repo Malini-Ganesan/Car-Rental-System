@@ -1,0 +1,52 @@
+.monitor {
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 15px;
+  color: black;
+}
+
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th {
+  background-color: #343a40;
+  color: white;
+  padding: 12px;
+  position: sticky;
+  top: 0;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  color: black;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Event colors */
+.created {
+  background-color: #d4edda;
+}
+
+.booked {
+  background-color: #d1ecf1;
+}
+
+.cancelled {
+  background-color: #f8d7da;
+}

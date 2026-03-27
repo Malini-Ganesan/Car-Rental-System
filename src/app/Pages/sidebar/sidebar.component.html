@@ -7,7 +7,7 @@
        routerLinkActive="active">
        Dashboard
     </a>
-    <a *ngIf="showAdmin() || showUser()"
+    <a *ngIf="showAdmin()|| showUser()"
        routerLink="/dashboard/car-list"
        routerLinkActive="active">
        Car List
@@ -24,10 +24,15 @@
        routerLinkActive="active">
        My Bookings
     </a>
-    <a *ngIf="showUser()"
+    <a *ngIf="showUser() || showAdmin()"
        routerLink="/dashboard/car-track"
        routerLinkActive="active">
        Track Car
+    </a>
+    <a *ngIf="showAdmin()"
+       routerLink="/dashboard/monitor"
+       routerLinkActive="active">
+       Monitor
     </a>
 
   </nav>

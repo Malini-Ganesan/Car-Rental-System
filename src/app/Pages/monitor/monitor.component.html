@@ -1,0 +1,30 @@
+<div class="monitor">
+  <h2>System Monitor</h2>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Message</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let log of logs"
+            [ngClass]="{
+              'created': log.eventType === 'CAR_CREATED',
+              'booked': log.eventType === 'BOOKING_CREATED',
+              'cancelled': log.eventType === 'BOOKING_CANCELLED'
+            }">
+
+          <td>{{ log.eventType }}</td>
+          <td>{{ log.message }}</td>
+          <td>{{ log.createdAt | date:'short' }}</td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

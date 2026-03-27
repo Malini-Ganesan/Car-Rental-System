@@ -9,6 +9,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { LandingComponent } from './Pages/landing/landing.component';
 import { DashboardOverviewComponent } from './Pages/dashboard-overview/dashboard-overview.component';
 import { CarTrackComponent } from './Pages/car/car-track/car-track.component';
+import { MonitorComponent } from './Pages/monitor/monitor.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -45,6 +46,11 @@ const routes: Routes = [
       {
         path: 'car-track', 
         component: CarTrackComponent, 
+        data: { roles: ['User', , 'Admin'] } 
+      },
+      {
+        path: 'monitor', 
+        component: MonitorComponent, 
         data: { roles: ['User'] } 
       }
     ]
