@@ -196,7 +196,7 @@ prevPage() {
       insuranceTotal = Number(car.insuranceCost);
     }
 
-    // 🔥 DAY + WEEK COMBINED LOGIC
+    // DAY + WEEK 
     else {
 
       if (!this.booking.startDate || !this.booking.endDate) {
@@ -223,8 +223,6 @@ prevPage() {
       basePrice = weekPrice + dayPrice;
       insuranceTotal = diffDays * Number(car.insuranceCost);
       this.booking.price = basePrice + insuranceTotal;
-      // 🔍 Debug (optional)
-      console.log(`Days: ${diffDays}, Weeks: ${weeks}, Remaining: ${remainingDays}`);
     }
 
   }

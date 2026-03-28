@@ -35,8 +35,6 @@ export class CarService {
   );
 }
  
-
-  // Supporting data
   getCategories(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/CarCategory`);
   }

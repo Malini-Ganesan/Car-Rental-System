@@ -19,11 +19,7 @@ export class BookingService {
   getAllBookings(): Observable<any> {
     return this.http.get(`${this.baseUrl}/all-bookings`);
   }
-  // booking.service.ts
   cancelBooking(id: number) {
     return this.http.put(`${this.baseUrl}/cancel/${id}`, {});
   }
-  deleteBooking(id: number) {
-  return this.http.delete(`http://localhost:8080/api/Booking/${id}`);
-}
 }

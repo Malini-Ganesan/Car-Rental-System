@@ -51,7 +51,7 @@ const routes: Routes = [
       {
         path: 'monitor', 
         component: MonitorComponent, 
-        data: { roles: ['User'] } 
+        data: { roles: ['Admin'] } 
       }
     ]
   },

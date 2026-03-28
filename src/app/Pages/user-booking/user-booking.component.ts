@@ -97,16 +97,4 @@ prevPage() {
     });
   }
 }
-deleteBooking(booking: any) {
-  if (!confirm('Are you sure you want to delete this booking?')) return;
-
-  this.bookingService.deleteBooking(booking.id).subscribe({
-    next: () => {
-      this.bookings = this.bookings.filter(b => b.id !== booking.id);
-    },
-    error: (err) => {
-      console.error('Delete failed', err);
-    }
-  });
-}
 }
