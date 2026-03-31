@@ -11,7 +11,8 @@ export class UserBookingComponent implements OnInit {
 
   bookings: any[] = [];
   isAdmin: boolean = false;
-
+ currentPage: number = 1;
+itemsPerPage: number = 6;
   constructor(
     private bookingService: BookingService,
     private oauthService: OAuthService
@@ -19,11 +20,26 @@ export class UserBookingComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkUserRole();
-    this.loadBookings();
   }
 
-  currentPage: number = 1;
-itemsPerPage: number = 6;
+   checkUserRole() {
+    const claims: any = this.oauthService.getIdentityClaims();
+    if (!claims) return;
+
+    const roles = claims.realm_access?.roles || [];
+    this.isAdmin = roles.includes('Admin');
+    this.loadBookings();
+    console.log("Is Admin:", this.isAdmin);
+  }
+
+    loadBookings() {
+    if (this.isAdmin) {
+      this.bookingService.getAllBookings().subscribe(res => {this.bookings = res, this.currentPage = 1;});
+    } else {
+      this.bookingService.getMyBookings().subscribe(res => {this.bookings = res, this.currentPage = 1;});
+    }
+    
+  }
 
 get paginatedBookings() {
   const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -46,22 +62,9 @@ prevPage() {
   }
 }
 
-  checkUserRole() {
-    const claims: any = this.oauthService.getIdentityClaims();
-    if (!claims) return;
 
-    const roles = claims.realm_access?.roles || [];
-    this.isAdmin = roles.includes('Admin');
-  }
 
-  loadBookings() {
-    if (this.isAdmin) {
-      this.bookingService.getAllBookings().subscribe(res => this.bookings = res);
-    } else {
-      this.bookingService.getMyBookings().subscribe(res => this.bookings = res);
-    }
-    this.currentPage = 1;
-  }
+
 
   cancelBooking(booking: any) {
 

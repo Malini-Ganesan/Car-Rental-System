@@ -1,7 +1,9 @@
-import { Component , OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart } from 'chart.js/auto';
 import { DashboardRefreshService } from 'src/app/core/services/dashboard-refresh.service';
+import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -9,36 +11,40 @@ import { DashboardRefreshService } from 'src/app/core/services/dashboard-refresh
   styleUrls: ['./dashboard-overview.component.css']
 })
 export class DashboardOverviewComponent implements OnInit {
-
-  totalCars: number = 0;
+  apiUrl = environment.apiUrl;
+    totalCars: number = 0;
   totalBookings: number = 0;
   carNames: string[] = [];
   bookingCounts: number[] = [];
 
-  constructor(private http: HttpClient, private refreshService: DashboardRefreshService) {}
+  constructor(private http: HttpClient, private refreshService: DashboardRefreshService) { }
 
   ngOnInit(): void {
     this.loadDashboard();
 
     this.refreshService.refresh$.subscribe(() => {
-    this.loadDashboard();
-  });
+      this.loadDashboard();
+    });
   }
 
   loadDashboard() {
-    this.http.get<any>('http://localhost:5020/api/Dashboard/summary')
+    this.http.get<any>(`${this.apiUrl}/Dashboard/summary`)
       .subscribe(res => {
+        console.log('Dashboard data:', res);
         this.totalCars = res.totalCars;
         this.totalBookings = res.totalBookings;
-
+        
         this.carNames = res.bookingsPerCar.map((c: any) => c.name);
         this.bookingCounts = res.bookingsPerCar.map((c: any) => c.bookingCount);
 
-        this.loadChart();
+
+        setTimeout(() => {
+          this.loadChart();
+        });
       });
   }
 
-  loadChart() {
+ loadChart() {
     new Chart("bookingChart", {
       type: 'bar',
       data: {

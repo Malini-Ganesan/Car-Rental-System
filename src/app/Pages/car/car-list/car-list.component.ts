@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CarService } from '../../../core/services/car.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { DashboardRefreshService } from 'src/app/core/services/dashboard-refresh.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-car-list',
@@ -10,7 +11,7 @@ import { DashboardRefreshService } from 'src/app/core/services/dashboard-refresh
 })
 export class CarListComponent implements OnInit {
 
-  apiUrl = 'http://localhost:5020/api';
+  apiUrl = environment.apiUrl;
   cars: any[] = [];
   showEditModal = false;
   selectedCar: any = {};

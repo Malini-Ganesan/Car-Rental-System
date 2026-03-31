@@ -20,6 +20,7 @@ import { DashboardOverviewComponent } from './Pages/dashboard-overview/dashboard
 import { CarTrackComponent } from './Pages/car/car-track/car-track.component';
 import { FooterComponent } from './Pages/footer/footer.component';
 import { MonitorComponent } from './Pages/monitor/monitor.component';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -75,7 +76,7 @@ export function initializeApp(oauthService: OAuthService) {
     FormsModule,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: ['http://localhost:5020/api'], 
+        allowedUrls: ['http://localhost:4200/api', 'http://localhost:5020/api'], 
         sendAccessToken: true
       }
     })

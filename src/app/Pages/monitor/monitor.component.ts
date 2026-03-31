@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-monitor',
@@ -11,6 +12,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
   logs: any[] = [];
   intervalId: any;
 
+  apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -25,7 +27,7 @@ export class MonitorComponent implements OnInit, OnDestroy {
   }
 
   loadLogs() {
-    this.http.get<any[]>('http://localhost:5020/api/log')
+    this.http.get<any[]>(`${this.apiUrl}/log`)
       .subscribe(res => {
         this.logs = res;
       });

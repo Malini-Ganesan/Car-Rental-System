@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CarService {
 
-  private baseUrl = 'http://localhost:5020/api';
-
+  private baseUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
   // Car CRUD operations
