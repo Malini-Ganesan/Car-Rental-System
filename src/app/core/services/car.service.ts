@@ -29,6 +29,7 @@ export class CarService {
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/Car/${id}`);
   }
+  
   checkAvailability(carId: number, startDate: string, endDate: string) {
   return this.http.get<any>(
     `${this.baseUrl}/Booking/check-availability?carId=${carId}&startDate=${startDate}&endDate=${endDate}`

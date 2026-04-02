@@ -68,21 +68,18 @@ prevPage() {
     this.currentPage = 1;
   }
 
-  trackCar(booking: any) {
-    
-    // Dummy location (same for all cars)
-    const lat = 9.9252;   // Madurai
-    const lng = 78.1198;
+ trackCar(booking: any) {
+  const lat = 9.9252;
+  const lng = 78.1198;
 
-    const url = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+  // Safe Google Maps embed URL (no user input)
+  this.mapUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
 
-    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  this.showTrackModal = true;
+}
 
-    this.showTrackModal = true;
-  }
-
-  closeTrackModal() {
-    this.showTrackModal = false;
-  }
+closeTrackModal() {
+  this.showTrackModal = false;
+}
 }
 

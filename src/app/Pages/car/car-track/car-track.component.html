@@ -3,6 +3,7 @@
 <div class="booking-wrapper">
   <div class="booking-container">
     <table *ngIf="bookings.length > 0">
+      <caption>List of booking cars and their tracking</caption>
       <thead>
         <tr>
           <th>Car Name</th>
@@ -59,7 +60,8 @@
       height="300"
       [src]="mapUrl"
       style="border:0;"
-      loading="lazy">
+      loading="lazy"
+      title="Google Map showing car location">
     </iframe>
 
     <br>

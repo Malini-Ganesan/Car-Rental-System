@@ -17,9 +17,6 @@ export class MonitorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadLogs();
-    // this.intervalId = setInterval(() => {
-    //   this.loadLogs();
-    // }, 3000);
   }
 
   ngOnDestroy(): void {

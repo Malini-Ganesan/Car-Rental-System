@@ -7,8 +7,8 @@ h2 {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
-  background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(15px);
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(15px);
 }
 
 .car-list th,
@@ -32,110 +32,28 @@ button {
   background-color: white;
 }
 
-/* Modal Background */
+/* Modal Background & Content */
 .modal {
   position: fixed;
+  z-index: 1000;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.55);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Popup Box */
-.modal-content {
-  background: white;
-  padding: 25px 30px;
-  width: 400px;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-/* Title */
-.modal-title {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-/* Form */
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: black;
-}
-
-.modal-title{
-  color: black;
-  font-size: x-large;
-}
-
-.modal-content input,
-.modal-content select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-/* Buttons */
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.update-btn {
-  background-color: #28a745;
-  color: white;
-}
-
-.cancel-btn {
-  background-color: #dc3545;
-  color: white;
-}
-
-.update-btn,
-.cancel-btn {
-  padding: 8px 18px;
-  border-radius: 5px;
-}
-
-/*booknow popup style*/
-/* Modal overlay */
-.modal {
-  position: fixed; 
-  z-index: 1000;  
-  left: 0;
-  top: 0;
-  width: 100%;     
-  height: 100%;    
-  overflow: auto; 
-  background-color: rgba(0, 0, 0, 0.5); 
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: auto;
 }
 
-/* Modal content box */
 .modal-content {
   background-color: #fff;
   padding: 20px 30px;
   border-radius: 8px;
-  width: 400px; 
+  width: 400px;
   max-width: 90%;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   animation: slideDown 0.3s ease-out;
 }
 
@@ -151,32 +69,35 @@ button {
   }
 }
 
-/* Modal header */
+/* Modal Titles */
+.modal-title,
 .modal-content h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 22px;
-  color: #333;
   text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: black;
+  font-size: x-large;
 }
 
-/* Labels and inputs */
+/* Form inside modal */
+.form-group,
 .modal-content label {
+  margin-bottom: 15px;
   display: block;
-  margin-bottom: 5px;
   font-weight: 500;
   color: #555;
 }
 
+.modal-content input,
+.modal-content select,
 .modal-content input[type="text"],
 .modal-content input[type="number"],
-.modal-content input[type="date"],
-.modal-content select {
+.modal-content input[type="date"] {
   width: 100%;
   padding: 8px 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
   border-radius: 4px;
+  border: 1px solid #ccc;
   font-size: 14px;
   box-sizing: border-box;
 }
@@ -189,18 +110,23 @@ button {
   text-align: center;
 }
 
-/* Buttons */
+/* Modal buttons */
+.modal-buttons,
+.modal-content button {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
 .modal-content button {
   padding: 8px 15px;
-  margin-right: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  align-items: center;
   width: 150px;
   margin-left: 35px;
-  padding: 6px 12px;
 }
 
 .modal-content button:first-of-type {
@@ -213,18 +139,27 @@ button {
   color: white;
 }
 
-/* Button hover effect */
 .modal-content button:hover {
   opacity: 0.9;
 }
 
+/* Specific buttons */
+.update-btn {
+  background-color: #28a745;
+  color: white;
+}
 
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
 
 /* Pagination */
 .pagination {
   margin-top: 20px;
   text-align: center;
 }
+
 .pagination button {
   margin: 0 10px;
   padding: 6px 12px;

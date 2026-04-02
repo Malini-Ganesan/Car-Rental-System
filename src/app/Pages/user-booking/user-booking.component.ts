@@ -11,8 +11,8 @@ export class UserBookingComponent implements OnInit {
 
   bookings: any[] = [];
   isAdmin: boolean = false;
- currentPage: number = 1;
-itemsPerPage: number = 6;
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
   constructor(
     private bookingService: BookingService,
     private oauthService: OAuthService
@@ -22,7 +22,7 @@ itemsPerPage: number = 6;
     this.checkUserRole();
   }
 
-   checkUserRole() {
+  checkUserRole() {
     const claims: any = this.oauthService.getIdentityClaims();
     if (!claims) return;
 
@@ -32,35 +32,41 @@ itemsPerPage: number = 6;
     console.log("Is Admin:", this.isAdmin);
   }
 
-    loadBookings() {
+  loadBookings() {
     if (this.isAdmin) {
-      this.bookingService.getAllBookings().subscribe(res => {this.bookings = res, this.currentPage = 1;});
+      this.bookingService.getAllBookings().subscribe(res => {
+        this.bookings = res;
+        this.currentPage = 1;
+      });
     } else {
-      this.bookingService.getMyBookings().subscribe(res => {this.bookings = res, this.currentPage = 1;});
+      this.bookingService.getMyBookings().subscribe(res => {
+        this.bookings = res;
+        this.currentPage = 1;
+      });
     }
-    
+
   }
 
-get paginatedBookings() {
-  const start = (this.currentPage - 1) * this.itemsPerPage;
-  return this.bookings.slice(start, start + this.itemsPerPage);
-}
-
-get totalPages() {
-  return Math.ceil(this.bookings.length / this.itemsPerPage);
-}
-
-nextPage() {
-  if (this.currentPage < this.totalPages) {
-    this.currentPage++;
+  get paginatedBookings() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.bookings.slice(start, start + this.itemsPerPage);
   }
-}
 
-prevPage() {
-  if (this.currentPage > 1) {
-    this.currentPage--;
+  get totalPages() {
+    return Math.ceil(this.bookings.length / this.itemsPerPage);
   }
-}
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
 
 
 
@@ -68,36 +74,36 @@ prevPage() {
 
   cancelBooking(booking: any) {
 
-  if (confirm("Are you sure to cancel?")) {
+    if (confirm("Are you sure to cancel?")) {
 
-    booking.isCancelling = true;
+      booking.isCancelling = true;
 
-    this.bookingService.cancelBooking(booking.id).subscribe({
-      next: (res: any) => {
-        const message =
-          typeof res === 'string'
-            ? res
-            : res?.message || "Booking cancelled successfully";
+      this.bookingService.cancelBooking(booking.id).subscribe({
+        next: (res: any) => {
+          const message =
+            typeof res === 'string'
+              ? res
+              : res?.message || "Booking cancelled successfully";
 
-        alert(message);
+          alert(message);
 
-        booking.status = "Cancelled";
-        booking.isCancelling = false;
+          booking.status = "Cancelled";
+          booking.isCancelling = false;
 
-        this.loadBookings();
-      },
+          this.loadBookings();
+        },
 
-      error: (err) => {
-        booking.isCancelling = false;
+        error: (err) => {
+          booking.isCancelling = false;
 
-        const message =
-          err.error?.message ||
-          err.error ||
-          "Cancel failed";
+          const message =
+            err.error?.message ||
+            err.error ||
+            "Cancel failed";
 
-        alert(message);
-      }
-    });
+          alert(message);
+        }
+      });
+    }
   }
-}
 }

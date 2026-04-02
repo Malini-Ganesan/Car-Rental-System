@@ -48,29 +48,29 @@ export class CarListComponent implements OnInit {
     this.checkUserRole();
   }
   //pagination
-currentPage: number = 1;
-itemsPerPage: number = 6;
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
 
-get paginatedCars() {
-  const start = (this.currentPage - 1) * this.itemsPerPage;
-  return this.cars.slice(start, start + this.itemsPerPage);
-}
-
-get totalPages() {
-  return Math.ceil(this.cars.length / this.itemsPerPage);
-}
-
-nextPage() {
-  if (this.currentPage < this.totalPages) {
-    this.currentPage++;
+  get paginatedCars() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.cars.slice(start, start + this.itemsPerPage);
   }
-}
 
-prevPage() {
-  if (this.currentPage > 1) {
-    this.currentPage--;
+  get totalPages() {
+    return Math.ceil(this.cars.length / this.itemsPerPage);
   }
-}
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
 
   // ===================== LOAD DATA =====================
   loadCars() {
@@ -161,71 +161,84 @@ prevPage() {
     }
   }
 
-  calculatePrice() {
-    const car = this.selectedCarForBooking;
-    if (this.booking.startDate && this.booking.endDate) {
-      this.carService
-        .checkAvailability(
-          this.booking.carId,
-          this.booking.startDate,
-          this.booking.endDate
-        )
-        .subscribe(res => {
-          if (res.isBooked) {
-            alert("Car already booked for selected dates");
-            this.booking.price = 0;
-          }
-        });
-    }
+  //======================Calculate Price=================
+calculatePrice() {
+  const car = this.selectedCarForBooking;
+  if (!car) return;
 
-    if (!car) return;
-    let basePrice = 0;
-    let insuranceTotal = 0;
-    console.log("Booking:", this.booking);
+  // ✅ HOUR booking → no API call
+  if (this.booking.type === 'hour') {
+    this.calculateHourlyPrice(car);
+    return;
+  }
 
-    // 🔹 HOUR
-    if (this.booking.type === 'hour') {
+  // ❗ For day/week → validate dates first
+  if (!this.booking.startDate || !this.booking.endDate) {
+    this.booking.price = 0;
+    return;
+  }
 
-      const hours = Number(this.booking.hours);
+  // ✅ Call API FIRST
+  this.carService
+    .checkAvailability(
+      this.booking.carId,
+      this.booking.startDate,
+      this.booking.endDate
+    )
+    .subscribe(res => {
 
-      if (!hours || hours <= 0) {
+      if (res.isBooked) {
+        alert("Car already booked for selected dates");
         this.booking.price = 0;
-        return;
+        return; // 🚫 STOP — do NOT calculate price
       }
 
-      this.booking.price = hours * Number(car.pricePerHour);
-      insuranceTotal = Number(car.insuranceCost);
+      // ✅ ONLY calculate if available
+      this.calculateDatePrice(car);
+    });
+}
+
+
+  calculateHourlyPrice(car: any) {
+    const hours = Number(this.booking.hours);
+
+    if (!hours || hours <= 0) {
+      this.booking.price = 0;
+      return;
     }
 
-    // DAY + WEEK 
-    else {
+    const basePrice = hours * Number(car.pricePerHour);
 
-      if (!this.booking.startDate || !this.booking.endDate) {
-        this.booking.price = 0;
-        return;
-      }
+    this.booking.price = basePrice;
+  }
 
-      const start = new Date(this.booking.startDate);
-      const end = new Date(this.booking.endDate);
-
-      let diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
-
-      if (diffDays <= 0) {
-        this.booking.price = 0;
-        return;
-      }
-
-      const weeks = Math.floor(diffDays / 7);   // full weeks
-      const remainingDays = diffDays % 7;       // leftover days
-
-      const weekPrice = weeks * Number(car.pricePerWeek);
-      const dayPrice = remainingDays * Number(car.pricePerDay);
-
-      basePrice = weekPrice + dayPrice;
-      insuranceTotal = diffDays * Number(car.insuranceCost);
-      this.booking.price = basePrice + insuranceTotal;
+  calculateDatePrice(car: any) {
+    if (!this.booking.startDate || !this.booking.endDate) {
+      this.booking.price = 0;
+      return;
     }
 
+    const start = new Date(this.booking.startDate);
+    const end = new Date(this.booking.endDate);
+
+    const diffDays =
+      Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
+
+    if (diffDays <= 0) {
+      this.booking.price = 0;
+      return;
+    }
+
+    const weeks = Math.floor(diffDays / 7);
+    const remainingDays = diffDays % 7;
+
+    const basePrice =
+      weeks * Number(car.pricePerWeek) +
+      remainingDays * Number(car.pricePerDay);
+
+    const insurance = diffDays * Number(car.insuranceCost);
+
+    this.booking.price = basePrice + insurance;
   }
   confirmBooking() {
 
@@ -243,7 +256,7 @@ prevPage() {
     let startDate: string;
     let endDate: string;
 
-    // 🔹 HOUR BOOKING
+    // HOUR BOOKING
     if (this.booking.type === 'hour') {
 
       if (!this.booking.hours || this.booking.hours <= 0) {
@@ -256,7 +269,7 @@ prevPage() {
       endDate = today.toISOString();
     }
 
-    // 🔹 DAY / WEEK BOOKING
+    // DAY / WEEK BOOKING
     else {
 
       if (!this.booking.startDate || !this.booking.endDate) {
@@ -281,7 +294,7 @@ prevPage() {
     this.carService.createBooking(payload).subscribe({
       next: () => {
         alert("Booking Successful");
-         this.refreshService.triggerRefresh();
+        this.refreshService.triggerRefresh();
         this.showBookingModal = false;
         this.loadCars();
       },

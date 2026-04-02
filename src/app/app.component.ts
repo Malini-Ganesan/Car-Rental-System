@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-root',

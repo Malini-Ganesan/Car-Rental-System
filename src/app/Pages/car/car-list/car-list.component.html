@@ -2,6 +2,7 @@
   <h2>Cars List</h2>
 
   <table>
+    <caption>List of available cars and their rental prices</caption>
     <thead>
       <tr>
         <th>Image</th>
@@ -19,7 +20,7 @@
       <tr *ngFor="let car of paginatedCars">
 
         <td>
-          <img *ngIf="car.imageUrl" [src]="'http://localhost:5020' + car.imageUrl" width="80" />
+          <img *ngIf="car.imageUrl" [src]="'http://localhost:5020' + car.imageUrl" width="80" alt="car image not loaded" />
         </td>
 
         <td>{{ car.name }}</td>

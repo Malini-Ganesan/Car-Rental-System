@@ -39,7 +39,6 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleMenu() {
-    // this.menuOpen = !this.menuOpen;
     document.body.classList.toggle('sidebar-open');
   }
 

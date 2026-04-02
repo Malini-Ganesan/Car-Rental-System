@@ -5,7 +5,7 @@ import { CarListComponent } from './Pages/car/car-list/car-list.component';
 import { CarCreateComponent } from './Pages/car/car-create/car-create.component';
 import { DashboardComponent } from './Pages/dashboard/dashboard.component';
 import { UserBookingComponent } from './Pages/user-booking/user-booking.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 import { LandingComponent } from './Pages/landing/landing.component';
 import { DashboardOverviewComponent } from './Pages/dashboard-overview/dashboard-overview.component';
 import { CarTrackComponent } from './Pages/car/car-track/car-track.component';
@@ -16,21 +16,21 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     data: { roles: ['Admin', 'User'] },
     children: [
       { path: '', redirectTo: 'dashboard-main', pathMatch: 'full' },
       { 
         path: 'dashboard-main', 
         component: DashboardOverviewComponent, 
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         data: { roles: ['User', 'Admin'] } 
       },
       { 
         path: 'car-list', 
         component: CarListComponent, 
-        canActivate: [AuthGuard],
+        canActivate: [authGuard],
         data: { roles: ['User', 'Admin'] } 
       },
       { 
@@ -46,7 +46,7 @@ const routes: Routes = [
       {
         path: 'car-track', 
         component: CarTrackComponent, 
-        data: { roles: ['User', , 'Admin'] } 
+        data: { roles: ['User','Admin'] } 
       },
       {
         path: 'monitor', 
